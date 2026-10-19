@@ -1,0 +1,46 @@
+# Your read, in the model.
+#
+# The context layer measures what it can — whether an offense has been beating
+# or missing its projections, how a defense has actually held up against each
+# position, whose snap share is moving — and shows it, but does not price it:
+# backtested, the projection already knows those things. What it cannot see is
+# what you know:
+# a coordinator you do not trust, a line that is about to get worse, a rookie
+# QB whose numbers have not caught up to how bad the tape looks.
+#
+# The test for whether something belongs here: would the projection already
+# know it? If yes, leave it out — double-counting made the backtested numbers
+# worse, not better. What belongs is what it is blind to: offseason
+# changes, coaching and scheme, a role change before it shows up on the depth
+# chart, production you think is unsustainable.
+#
+# Numbers are fractional adjustments to a player's projection.
+#   -0.15  ->  knock 15% off
+#   +0.10  ->  add 10%
+# Anything beyond +/-0.35 is clamped, and everything combined is clamped at
+# +/-0.30. With injury tags, they are the only thing that moves a projection,
+# and they always show
+# up by name in the report and in your alerts, so a lineup call you do not
+# recognize can always be traced back to a line in this file.
+#
+# Copy this to opinions.toml and edit. Team keys are NFL abbreviations.
+
+[teams]
+# A team entry is a claim about an OFFENSE, so by default it moves QB, RB, WR
+# and TE only. It deliberately skips K and DEF: a kicker's value partly
+# inverts with offensive quality (drives that stall inside the 40 become field
+# goal attempts), and a team defense scores off turnovers and sacks, which
+# have little to do with its own offense.
+# NYJ = -0.15
+# NYJ = { adjust = -0.15, why = "good on paper, not a good football team" }
+
+# Override the default reach when you mean to:
+# NYJ = { adjust = -0.15, why = "whole team", positions = ["QB", "RB", "WR", "TE", "K", "DEF"] }
+# DEN = { adjust = -0.08, why = "backfield is a committee", positions = ["RB"] }
+
+[players]
+# Naming someone is unambiguous, so position never filters a player entry.
+# This is also how you fade a kicker or a defense.
+# "Garrett Wilson" = -0.10
+# "New York Jets" = { adjust = -0.10, why = "the defense, specifically" }
+# "Some Rookie" = { adjust = 0.08, why = "role is bigger than the box score" }

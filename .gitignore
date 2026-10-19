@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Secrets and personal config
+.env
+.env.*
+!.env.example
+opinions.toml
+*token*.json
+
+# Runtime data
+cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

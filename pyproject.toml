@@ -1,0 +1,31 @@
+[project]
+name = "ff-manager"
+version = "0.1.0"
+description = "Fantasy football manager: live draft board, weekly start/sit and waivers"
+# The floor, not the target: tomllib needs 3.11. Development and the
+# container both run 3.14 (see .python-version and the Dockerfile).
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "rich>=13.7",
+]
+
+[project.scripts]
+ffm = "ffm.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# `uv sync` installs these too; `uv sync --no-dev` skips them, which is what
+# the container image does.
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["ffm*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

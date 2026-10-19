@@ -1,0 +1,40 @@
+# Long-running watcher. `docker compose up -d`, then `docker compose logs -f`.
+#
+# Settings come from .env next to this file — the same one the CLI reads, so
+# TELEGRAM_BOT_TOKEN and friends are already there. Add FFM_LEAGUE_ID and
+# FFM_SLEEPER_USER to it as well.
+
+services:
+  watcher:
+    build: .
+    image: ff-manager:latest
+    container_name: ff-manager
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Digest times are local. Set this to your timezone or 09:00 means
+      # 09:00 UTC.
+      TZ: ${TZ:-America/New_York}
+      FFM_CACHE_DIR: /data
+    volumes:
+      # Cached NFL data, the dedupe state and the injury snapshot.
+      - ffm-data:/data
+      # Your own reads, if you keep any: create opinions.toml next to this
+      # file and uncomment. Read-only: the container never writes it.
+      # - ./opinions.toml:/app/opinions.toml:ro
+    command:
+      - watch
+      - --league=${FFM_LEAGUE_ID:?set FFM_LEAGUE_ID in .env}
+      - --user=${FFM_SLEEPER_USER:?set FFM_SLEEPER_USER in .env}
+      - --interval=1800
+      - --digest-at=09:00
+    # A poller with no log rotation will eventually fill a small VM's disk.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  ffm-data:
